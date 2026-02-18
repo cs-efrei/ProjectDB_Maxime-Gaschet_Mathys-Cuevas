@@ -24,34 +24,34 @@ later.
 Provide the business rules and the data
 dictionary.
 
-Désignation de la donnée,Type de donnée,Taille (caractères/chiffres)
-Nom du produit,Texte,100
-Description produit,Texte long,500
-Prix unitaire HT,Décimal,10 (2 décimales)
-Taux de TVA,Décimal,5 (2 décimales)
-Poids du produit,Décimal,7 (3 décimales)
-Nom de la catégorie,Texte,50
-Référence variante (SKU),Texte,20
-Taille de l'accessoire,Texte,15
-Couleur de l'accessoire,Texte,20
-Quantité en stock,Entier,5
-Nom du client,Texte,50
-Prénom du client,Texte,50
-Email du client,Texte,80
-Téléphone du client,Numérique,15
-Adresse de livraison,Texte,150
-Code postal,Texte,10
-Ville de livraison,Texte,50
-Pays de livraison,Texte,50
-Numéro de commande,Texte,15
-Date de la commande,Date/Heure,19
-État de la commande,Texte,25
-Quantité commandée,Entier,3
-Montant total TTC,Décimal,12 (2 décimales)
-Mode de paiement,Texte,30
-Code promotionnel,Texte,10
-Valeur de réduction (%),Entier,3
-Nom du fournisseur,Texte,60
-Marque distribuée,Texte,40
-Nom de l'employé,Texte,50
-Rôle de l'employé,Texte,40
+Data Designation,Data Type,Size (characters/digits)
+Product Name,Text,100
+Product Description,Long Text,500
+Unit Price (excl. tax),Decimal,10 (2 decimals)
+VAT Rate,Decimal,5 (2 decimals)
+Product Weight,Decimal,7 (3 decimals)
+Category Name,Text,50
+Variant Reference (SKU),Text,20
+Accessory Size,Text,15
+Accessory Color,Text,20
+Stock Quantity,Integer,5
+Customer Last Name,Text,50
+Customer First Name,Text,50
+Customer Email,Text,80
+Customer Phone,Numerical,15
+Shipping Address,Text,150
+Postal Code,Text,10
+Shipping City,Text,50
+Shipping Country,Text,50
+Order Number,Text,15
+Order Date,Date/Time,19
+Order Status,Text,25
+Ordered Quantity,Integer,3
+Total Amount (incl. tax),Decimal,12 (2 decimals)
+Payment Method,Text,30
+Promo Code,Text,10
+Discount Value (%),Integer,3
+Supplier Name,Text,60
+Distributed Brand,Text,40
+Employee Name,Text,50
+Employee Role,Text,40
