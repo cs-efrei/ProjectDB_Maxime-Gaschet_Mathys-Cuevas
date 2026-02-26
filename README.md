@@ -50,5 +50,8 @@ Weak Entity (Relative Identification): The ADDRESS entity is a weak entity relat
 
 Reflexive Relationship: The BE_COMPATIBLE association links products (accessories) to other products within the same table.
 
+<img width="2713" height="1038" alt="image" src="https://github.com/user-attachments/assets/e5cac6ad-39c5-4c18-9123-2bf985674b52" />
+
+
 
 
