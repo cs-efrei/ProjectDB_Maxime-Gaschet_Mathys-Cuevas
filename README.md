@@ -52,6 +52,44 @@ Reflexive Relationship: The BE_COMPATIBLE association links products (accessorie
 
 <img width="2713" height="1038" alt="image" src="https://github.com/user-attachments/assets/e5cac6ad-39c5-4c18-9123-2bf985674b52" />
 
+3. Logical Data Model - LDM (Step 3)
+
+Customer = (customer_id INT, last_name VARCHAR(50), first_name VARCHAR(50), email VARCHAR(100), phone_number VARCHAR(15), password VARCHAR(255), registration_date DATE);
+Address = (address_id INT, street VARCHAR(150), zip_code VARCHAR(10), city VARCHAR(50), country VARCHAR(50), #customer_id);
+Order_ = (order_id INT, order_date DATE, order_status VARCHAR(20), total_amount INT, #address_id, #customer_id);
+Category = (category_id INT, category_name VARCHAR(50));
+Brand = (band_id INT, brand_name VARCHAR(50));
+Employee = (employee_id INT, employee_name VARCHAR(50), employee_role VARCHAR(30));
+Product = (product_id INT, product_sku VARCHAR(30), product_name VARCHAR(100), product_desc VARCHAR(500), product_price DECIMAL(15,2), product_stock INT, product_size VARCHAR(20), #employee_id, #band_id, #category_id);
+Contain = (#order_id, #product_id, purchased_quantity INT, locked_unit_price DECIMAL(15,2));
+Be_compatible = (#product_id, #product_id_1);
+
+
+3. Logical Data Model - LDM (Step 3)
+
+Derived from the Conceptual Data Model, here is the relational schema in 3rd Normal Form (3NF).
+Note: Primary keys are underlined, and foreign keys are indicated with a hashtag (#).
+
+CUSTOMER (<ins>customer_id</ins>, last_name, first_name, email, phone_number, password, registration_date)
+
+ADDRESS (<ins>address_id</ins>, <ins>customer_id</ins>#, street, zip_code, city, country)
+
+Address is a weak entity, so it includes the Customer's identifier as part of its primary key.
+
+BRAND (<ins>brand_id</ins>, brand_name)
+
+CATEGORY (<ins>category_id</ins>, category_name)
+
+EMPLOYEE (<ins>employee_id</ins>, employee_name, employee_role)
+
+PRODUCT (<ins>product_id</ins>, product_sku, product_name, product_desc, product_price, product_stock, product_size, brand_id#, category_id#)
+
+ORDERS (<ins>order_id</ins>, order_date, order_status, total_amount, customer_id#, address_id#, employee_id#)
+
+CONTAIN (<ins>order_id</ins>#, <ins>product_id</ins>#, purchased_quantity, locked_unit_price)
+
+BE_COMPATIBLE (<ins>main_product_id</ins>#, <ins>accessory_product_id</ins>#)
+
 
 
 
