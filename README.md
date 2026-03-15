@@ -67,8 +67,6 @@ Be_compatible = (#product_id, #product_id_1);
 
 
 
-DECIMAL(P,S): Precise numerical value for financial data
-
 
 
 
