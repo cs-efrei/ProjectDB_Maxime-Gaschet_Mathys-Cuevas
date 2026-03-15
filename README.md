@@ -54,41 +54,42 @@ Reflexive Relationship: The BE_COMPATIBLE association links products (accessorie
 
 3. Logical Data Model - LDM (Step 3)
 
-Customer = (customer_id INT, last_name VARCHAR(50), first_name VARCHAR(50), email VARCHAR(100), phone_number VARCHAR(15), password VARCHAR(255), registration_date DATE);
-Address = (address_id INT, street VARCHAR(150), zip_code VARCHAR(10), city VARCHAR(50), country VARCHAR(50), #customer_id);
-Order_ = (order_id INT, order_date DATE, order_status VARCHAR(20), total_amount INT, #address_id, #customer_id);
-Category = (category_id INT, category_name VARCHAR(50));
-Brand = (band_id INT, brand_name VARCHAR(50));
-Employee = (employee_id INT, employee_name VARCHAR(50), employee_role VARCHAR(30));
-Product = (product_id INT, product_sku VARCHAR(30), product_name VARCHAR(100), product_desc VARCHAR(500), product_price DECIMAL(15,2), product_stock INT, product_size VARCHAR(20), #employee_id, #band_id, #category_id);
-Contain = (#order_id, #product_id, purchased_quantity INT, locked_unit_price DECIMAL(15,2));
-Be_compatible = (#product_id, #product_id_1);
+👥 User & Staff Management
+CUSTOMER (<u>customer_id</u> INT, last_name VARCHAR(50), first_name VARCHAR(50), email VARCHAR(100), phone_number VARCHAR(15), password VARCHAR(255), registration_date DATE)
 
+EMPLOYEE (<u>employee_id</u> INT, employee_name VARCHAR(50), employee_role VARCHAR(30))
 
-3. Logical Data Model - LDM (Step 3)
+📍 Location & Logistics
+ADDRESS (<u>address_id</u> INT, <u>customer_id#</u> INT, street VARCHAR(150), zip_code VARCHAR(10), city VARCHAR(50), country VARCHAR(50))
 
-Derived from the Conceptual Data Model, here is the relational schema in 3rd Normal Form (3NF).
-Note: Primary keys are underlined, and foreign keys are indicated with a hashtag (#).
+Note: Address is a weak entity dependent on Customer.
 
-CUSTOMER (<ins>customer_id</ins>, last_name, first_name, email, phone_number, password, registration_date)
+📦 Product Catalog
+BRAND (<u>brand_id</u> INT, brand_name VARCHAR(50))
 
-ADDRESS (<ins>address_id</ins>, <ins>customer_id</ins>#, street, zip_code, city, country)
+CATEGORY (<u>category_id</u> INT, category_name VARCHAR(50))
 
-Address is a weak entity, so it includes the Customer's identifier as part of its primary key.
+PRODUCT (<u>product_id</u> INT, product_sku VARCHAR(30), product_name VARCHAR(100), product_desc VARCHAR(500), product_price DECIMAL(15,2), product_stock INT, product_size VARCHAR(20), brand_id# INT, category_id# INT)
 
-BRAND (<ins>brand_id</ins>, brand_name)
+BE_COMPATIBLE (<u>main_product_id#</u> INT, <u>accessory_product_id#</u> INT)
 
-CATEGORY (<ins>category_id</ins>, category_name)
+Self-referencing relationship to manage product compatibility/accessories.
 
-EMPLOYEE (<ins>employee_id</ins>, employee_name, employee_role)
+🛍️ Sales & Orders
+ORDERS (<u>order_id</u> INT, order_date DATE, order_status VARCHAR(20), total_amount DECIMAL(15,2), customer_id# INT, address_id# INT, employee_id# INT)
 
-PRODUCT (<ins>product_id</ins>, product_sku, product_name, product_desc, product_price, product_stock, product_size, brand_id#, category_id#)
+CONTAIN (<u>order_id#</u> INT, <u>product_id#</u> INT, purchased_quantity INT, locked_unit_price DECIMAL(15,2))
 
-ORDERS (<ins>order_id</ins>, order_date, order_status, total_amount, customer_id#, address_id#, employee_id#)
+The locked_unit_price ensures historical price accuracy regardless of future product price changes.
 
-CONTAIN (<ins>order_id</ins>#, <ins>product_id</ins>#, purchased_quantity, locked_unit_price)
+🔑 Notation Legend
+<u>Underlined</u>: Primary Key (PK)
 
-BE_COMPATIBLE (<ins>main_product_id</ins>#, <ins>accessory_product_id</ins>#)
+#: Foreign Key (FK)
+
+VARCHAR(N): Variable character string with maximum length N
+
+DECIMAL(P,S): Precise numerical value for financial data
 
 
 
