@@ -66,6 +66,40 @@ Contain = (#order_id, #product_id, purchased_quantity INT, locked_unit_price DEC
 Be_compatible = (#product_id, #product_id_1);
 
 
+4. Data Insertion Prompt (Step 4)
+
+To automatically generate realistic mock data for our database, we used the prompt structure outlined in Lab 1. Here is the exact prompt submitted to the Generative AI:
+
+Provide the insertion queries used to populate the database, whose relational model is as follows:
+Customer = (customer_id INT, last_name VARCHAR(50), first_name VARCHAR(50), email VARCHAR(100), phone_number VARCHAR(15), password VARCHAR(255), registration_date DATE); Primary Key: customer_id
+Address = (address_id INT, street VARCHAR(150), zip_code VARCHAR(10), city VARCHAR(50), country VARCHAR(50), #customer_id); Primary Key: address_id
+Order_ = (order_id INT, order_date DATE, order_status VARCHAR(20), total_amount INT, #address_id, #customer_id); Primary Key: order_id
+Category = (category_id INT, category_name VARCHAR(50)); Primary Key: category_id
+Brand = (band_id INT, brand_name VARCHAR(50)); Primary Key: band_id
+Employee = (employee_id INT, employee_name VARCHAR(50), employee_role VARCHAR(30)); Primary Key: employee_id
+Product = (product_id INT, product_sku VARCHAR(30), product_name VARCHAR(100), product_desc VARCHAR(500), product_price DECIMAL(15,2), product_stock INT, product_size VARCHAR(20), #employee_id, #band_id, #category_id); Primary Key: product_id
+Contain = (#order_id, #product_id, purchased_quantity INT, locked_unit_price DECIMAL(15,2)); Primary Keys: order_id, product_id
+Be_compatible = (#product_id, #product_id_1); Primary Keys: product_id, product_id_1
+
+Primary keys correspond to IDs, unless otherwise specified (when it is a composite attribute). Foreign keys are identified by # and have the same name as the primary keys to which they refer.
+
+There must be: 5 rows for the Brand table, 4 rows for Category, 3 rows for Employee, 5 rows for Customer, 6 rows for Address, 7 rows for Product, 5 rows for Order_, 8 order lines in Contain, and 3 relationships in Be_compatible.
+
+The shop sells surfboards, wetsuits, leashes, and fins. The data must be realistic, using real surf brand names (like Quiksilver, Rip Curl, FCS, JS Industries) and realistic product prices and descriptions.
+
+Foreign keys must refer to existing primary keys: provide the lines starting with filling in the tables in which there are no foreign keys, then the tables in which the foreign keys refer to primary keys in tables that have already been filled in.
+
+The data must comply with the following validation constraints:
+ALTER TABLE Customer ADD CONSTRAINT chk_customer_email CHECK (email LIKE '%@%.%');
+ALTER TABLE Product ADD CONSTRAINT chk_product_price CHECK (product_price > 0);
+ALTER TABLE Product ADD CONSTRAINT chk_product_stock CHECK (product_stock >= 0);
+ALTER TABLE Order ADD CONSTRAINT chk_order_status CHECK (order_status IN ('Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'));
+ALTER TABLE Contain ADD CONSTRAINT chk_purchased_quantity CHECK (purchased_quantity >= 1);
+ALTER TABLE Contain ADD CONSTRAINT chk_locked_price CHECK (locked_unit_price >= 0);
+
+Make sure that the customers' first and last names refer to various origins and are mixed.
+Provide the set in the form of an SQL script ready to be executed.
+
 
 
 
