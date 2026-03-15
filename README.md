@@ -52,42 +52,20 @@ Reflexive Relationship: The BE_COMPATIBLE association links products (accessorie
 
 <img width="2713" height="1038" alt="image" src="https://github.com/user-attachments/assets/e5cac6ad-39c5-4c18-9123-2bf985674b52" />
 
+
 3. Logical Data Model - LDM (Step 3)
 
-👥 User & Staff Management
-CUSTOMER (<u>customer_id</u> INT, last_name VARCHAR(50), first_name VARCHAR(50), email VARCHAR(100), phone_number VARCHAR(15), password VARCHAR(255), registration_date DATE)
+Customer = (customer_id INT, last_name VARCHAR(50), first_name VARCHAR(50), email VARCHAR(100), phone_number VARCHAR(15), password VARCHAR(255), registration_date DATE);
+Address = (address_id INT, street VARCHAR(150), zip_code VARCHAR(10), city VARCHAR(50), country VARCHAR(50), #customer_id);
+Order_ = (order_id INT, order_date DATE, order_status VARCHAR(20), total_amount INT, #address_id, #customer_id);
+Category = (category_id INT, category_name VARCHAR(50));
+Brand = (band_id INT, brand_name VARCHAR(50));
+Employee = (employee_id INT, employee_name VARCHAR(50), employee_role VARCHAR(30));
+Product = (product_id INT, product_sku VARCHAR(30), product_name VARCHAR(100), product_desc VARCHAR(500), product_price DECIMAL(15,2), product_stock INT, product_size VARCHAR(20), #employee_id, #band_id, #category_id);
+Contain = (#order_id, #product_id, purchased_quantity INT, locked_unit_price DECIMAL(15,2));
+Be_compatible = (#product_id, #product_id_1);
 
-EMPLOYEE (<u>employee_id</u> INT, employee_name VARCHAR(50), employee_role VARCHAR(30))
 
-📍 Location & Logistics
-ADDRESS (<u>address_id</u> INT, <u>customer_id#</u> INT, street VARCHAR(150), zip_code VARCHAR(10), city VARCHAR(50), country VARCHAR(50))
-
-Note: Address is a weak entity dependent on Customer.
-
-📦 Product Catalog
-BRAND (<u>brand_id</u> INT, brand_name VARCHAR(50))
-
-CATEGORY (<u>category_id</u> INT, category_name VARCHAR(50))
-
-PRODUCT (<u>product_id</u> INT, product_sku VARCHAR(30), product_name VARCHAR(100), product_desc VARCHAR(500), product_price DECIMAL(15,2), product_stock INT, product_size VARCHAR(20), brand_id# INT, category_id# INT)
-
-BE_COMPATIBLE (<u>main_product_id#</u> INT, <u>accessory_product_id#</u> INT)
-
-Self-referencing relationship to manage product compatibility/accessories.
-
-🛍️ Sales & Orders
-ORDERS (<u>order_id</u> INT, order_date DATE, order_status VARCHAR(20), total_amount DECIMAL(15,2), customer_id# INT, address_id# INT, employee_id# INT)
-
-CONTAIN (<u>order_id#</u> INT, <u>product_id#</u> INT, purchased_quantity INT, locked_unit_price DECIMAL(15,2))
-
-The locked_unit_price ensures historical price accuracy regardless of future product price changes.
-
-🔑 Notation Legend
-<u>Underlined</u>: Primary Key (PK)
-
-#: Foreign Key (FK)
-
-VARCHAR(N): Variable character string with maximum length N
 
 DECIMAL(P,S): Precise numerical value for financial data
 
