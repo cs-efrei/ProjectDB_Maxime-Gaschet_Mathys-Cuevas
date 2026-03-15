@@ -101,6 +101,15 @@ Make sure that the customers' first and last names refer to various origins and 
 Provide the set in the form of an SQL script ready to be executed.
 
 
+5. Usage Scenario for Querying (Step 5)
 
+Scenario Context: Marketing & Operations Analysis
+The database is actively used by two main departments at the Surf Shop:
+
+The Marketing Department: They need to extract customer data to target specific cities for localized ad campaigns, understand which product categories generate the most revenue, and identify products that are frequently bought together or never sold.
+
+The Logistics & Operations Department: They use the database to manage employee workloads (seeing who prepares/manages the most products), track inventory values, monitor the statuses of recent high-value orders, and ensure stock is moving efficiently.
+
+The queries formulated in 4_interrogation.sql are specifically designed to answer the day-to-day operational questions raised by these two departments.
 
 
