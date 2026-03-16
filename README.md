@@ -64,15 +64,17 @@ Here is the Conceptual Data Model created on Looping, complying with the **3rd N
 ## 3. Logical Data Model - LDM (Step 3)
 
 ```
-Customer    = (customer_id INT, last_name VARCHAR(50), first_name VARCHAR(50), email VARCHAR(100), phone_number VARCHAR(15), password VARCHAR(255), registration_date DATE)
-Address     = (address_id INT, street VARCHAR(150), zip_code VARCHAR(10), city VARCHAR(50), country VARCHAR(50), #customer_id)
-Order_      = (order_id INT, order_date DATE, order_status VARCHAR(20), total_amount INT, #address_id, #customer_id)
-Category    = (category_id INT, category_name VARCHAR(50))
-Brand       = (band_id INT, brand_name VARCHAR(50))
-Employee    = (employee_id INT, employee_name VARCHAR(50), employee_role VARCHAR(30))
-Product     = (product_id INT, product_sku VARCHAR(30), product_name VARCHAR(100), product_desc VARCHAR(500), product_price DECIMAL(15,2), product_stock INT, product_size VARCHAR(20), #employee_id, #band_id, #category_id)
-Contain     = (#order_id, #product_id, purchased_quantity INT, locked_unit_price DECIMAL(15,2))
-Be_compatible = (#product_id, #product_id_1)
+Customer = (customer_id INT, last_name VARCHAR(50), first_name VARCHAR(50), email VARCHAR(100), phone_number VARCHAR(15), password VARCHAR(255), registration_date DATE);
+Category = (category_id INT, category_name VARCHAR(50));
+Brand = (band_id INT, brand_name VARCHAR(50));
+Employee = (employee_id INT, employee_name VARCHAR(50), employee_role VARCHAR(30));
+Location = (zip_code VARCHAR(10), city VARCHAR(50), country VARCHAR(50));
+Address = (address_id INT, street VARCHAR(150), #zip_code, #customer_id);
+Order_ = (order_id INT, order_date DATE, order_status VARCHAR(20), #address_id);
+Product = (product_id INT, product_sku VARCHAR(30), product_name VARCHAR(100), product_desc VARCHAR(500), product_price DECIMAL(15,2), product_stock INT, product_size VARCHAR(20), #employee_id, #band_id, #category_id);
+Contain = (#order_id, #product_id, purchased_quantity INT, locked_unit_price DECIMAL(15,2));
+Be_compatible = (#product_id, #product_id_1);
+
 ```
 
 ---
@@ -84,15 +86,16 @@ To automatically generate realistic mock data for our database, we used the prom
 > Provide the insertion queries used to populate the database, whose relational model is as follows:
 >
 > ```
-> Customer      = (customer_id INT, last_name VARCHAR(50), first_name VARCHAR(50), email VARCHAR(100), phone_number VARCHAR(15), password VARCHAR(255), registration_date DATE); Primary Key: customer_id
-> Address       = (address_id INT, street VARCHAR(150), zip_code VARCHAR(10), city VARCHAR(50), country VARCHAR(50), #customer_id); Primary Key: address_id
-> Order_        = (order_id INT, order_date DATE, order_status VARCHAR(20), total_amount INT, #address_id, #customer_id); Primary Key: order_id
-> Category      = (category_id INT, category_name VARCHAR(50)); Primary Key: category_id
-> Brand         = (band_id INT, brand_name VARCHAR(50)); Primary Key: band_id
-> Employee      = (employee_id INT, employee_name VARCHAR(50), employee_role VARCHAR(30)); Primary Key: employee_id
-> Product       = (product_id INT, product_sku VARCHAR(30), product_name VARCHAR(100), product_desc VARCHAR(500), product_price DECIMAL(15,2), product_stock INT, product_size VARCHAR(20), #employee_id, #band_id, #category_id); Primary Key: product_id
-> Contain       = (#order_id, #product_id, purchased_quantity INT, locked_unit_price DECIMAL(15,2)); Primary Keys: order_id, product_id
-> Be_compatible = (#product_id, #product_id_1); Primary Keys: product_id, product_id_1
+> Customer = (customer_id INT, last_name VARCHAR(50), first_name VARCHAR(50), email VARCHAR(100), phone_number VARCHAR(15), password VARCHAR(255), registration_date DATE);
+> Category = (category_id INT, category_name VARCHAR(50));
+> Brand = (band_id INT, brand_name VARCHAR(50));
+> Employee = (employee_id INT, employee_name VARCHAR(50), employee_role VARCHAR(30));
+> Location = (zip_code VARCHAR(10), city VARCHAR(50), country VARCHAR(50));
+> Address = (address_id INT, street VARCHAR(150), #zip_code, #customer_id);
+> Order_ = (order_id INT, order_date DATE, order_status VARCHAR(20), #address_id);
+> Product = (product_id INT, product_sku VARCHAR(30), product_name VARCHAR(100), product_desc VARCHAR(500), product_price DECIMAL(15,2), product_stock INT, product_size VARCHAR(20), #employee_id, #band_id, #category_id);
+> Contain = (#order_id, #product_id, purchased_quantity INT, locked_unit_price DECIMAL(15,2));
+> Be_compatible = (#product_id, #product_id_1);
 > ```
 >
 > Primary keys correspond to IDs, unless otherwise specified (when it is a composite attribute). Foreign keys are identified by `#` and have the same name as the primary keys to which they refer.
