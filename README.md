@@ -106,6 +106,7 @@ To automatically generate realistic mock data for our database, we used the prom
 | Table | Rows |
 |-------|------|
 | Brand | 5 |
+| Location | 5 |
 | Category | 4 |
 | Employee | 3 |
 | Customer | 5 |
