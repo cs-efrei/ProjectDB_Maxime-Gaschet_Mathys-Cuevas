@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏄‍♂️ Surf Shop Database — Query Results Showcase</title>
+    <meta name="description"
+        content="Interactive showcase of SQL queries and results for the Surf Shop Database Mini-Project by Maxime Gaschet & Mathys Cuevas-Yim.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <header class="hero">
+        <div class="hero-bg-anim"></div>
+        <div class="hero-content">
+            <span class="hero-badge">EFREI — Database Mini-Project</span>
+            <h1>Surf Shop <span class="gradient-text">Database</span></h1>
+            <p class="hero-subtitle">Interactive SQL Query Results Showcase</p>
+            <p class="hero-authors">Maxime GASCHET &amp; Mathys CUEVAS-YIM</p>
+            <div class="hero-stats">
+                <div class="stat"><span class="stat-num">10</span><span class="stat-label">Tables</span></div>
+                <div class="stat"><span class="stat-num">20</span><span class="stat-label">Queries</span></div>
+                <div class="stat"><span class="stat-num">4</span><span class="stat-label">Categories</span></div>
+                <div class="stat"><span class="stat-num">3NF</span><span class="stat-label">Compliant</span></div>
+            </div>
+            <a href="#queries" class="cta-btn">Explore Queries ↓</a>
+        </div>
+    </header>
+
+    <!-- ═══════════════ SCHEMA OVERVIEW ═══════════════ -->
+    <section class="schema-section" id="schema">
+        <div class="container">
+            <h2 class="section-title">Database Schema <span class="gradient-text">Overview</span></h2>
+            <p class="section-desc">Our Surf Shop database contains 10 tables following the MERISE methodology — fully
+                normalized to 3NF.</p>
+            <div class="schema-grid">
+                <div class="schema-card" data-color="blue">
+                    <div class="schema-icon">👤</div>
+                    <h3>Customer</h3>
+                    <p>5 rows — customer_id, last_name, first_name, email, phone_number, password, registration_date</p>
+                </div>
+                <div class="schema-card" data-color="teal">
+                    <div class="schema-icon">📍</div>
+                    <h3>Address</h3>
+                    <p>6 rows — address_id, street, zip_code (FK→Location), customer_id (FK)</p>
+                </div>
+                <div class="schema-card" data-color="cyan">
+                    <div class="schema-icon">🗺️</div>
+                    <h3>Location <span style="font-size:0.7em;color:var(--cat3);font-weight:600;">NEW</span></h3>
+                    <p>5 rows — zip_code (PK), city, country — extracted for 3NF</p>
+                </div>
+                <div class="schema-card" data-color="purple">
+                    <div class="schema-icon">📦</div>
+                    <h3>Order_</h3>
+                    <p>5 rows — order_id, order_date, order_status, address_id (FK) — total_amount removed (3NF)</p>
+                </div>
+                <div class="schema-card" data-color="orange">
+                    <div class="schema-icon">🏄</div>
+                    <h3>Product</h3>
+                    <p>7 rows — product_id, product_sku, product_name, product_desc, product_price, product_stock,
+                        product_size</p>
+                </div>
+                <div class="schema-card" data-color="pink">
+                    <div class="schema-icon">🏷️</div>
+                    <h3>Brand</h3>
+                    <p>5 rows — band_id, brand_name</p>
+                </div>
+                <div class="schema-card" data-color="green">
+                    <div class="schema-icon">📂</div>
+                    <h3>Category</h3>
+                    <p>4 rows — category_id, category_name</p>
+                </div>
+                <div class="schema-card" data-color="amber">
+                    <div class="schema-icon">👷</div>
+                    <h3>Employee</h3>
+                    <p>3 rows — employee_id, employee_name, employee_role</p>
+                </div>
+                <div class="schema-card" data-color="red">
+                    <div class="schema-icon">🛒</div>
+                    <h3>Contain</h3>
+                    <p>8 rows — order_id (PK/FK), product_id (PK/FK), purchased_quantity, locked_unit_price</p>
+                </div>
+                <div class="schema-card" data-color="indigo">
+                    <div class="schema-icon">🔗</div>
+                    <h3>Be_compatible</h3>
+                    <p>3 rows — product_id (PK/FK), product_id_1 (PK/FK) — Reflexive relationship</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+<!-- ═══════════════ CDM DIAGRAM ═══════════════ -->
+<section class="cdm-section" id="cdm">
+    <div class="container">
+        <h2 class="section-title">Conceptual Data Model <span class="gradient-text">(CDM)</span></h2>
+        <p class="section-desc">Designed on Looping — 3NF compliant, with the new <strong>Location</strong> entity extracted from Address for full normalization.</p>
+        <div class="cdm-card">
+            <div class="cdm-img-wrap">
+                <img src="cdm.png" alt="Surf Shop Conceptual Data Model — Looping diagram showing all entities and relationships including the new Location entity" />
+            </div>
+            <div class="cdm-caption">
+                <span class="cdm-tag">MERISE / Looping</span>
+                <span class="cdm-tag">10 Entities</span>
+                <span class="cdm-tag">3rd Normal Form</span>
+                <span class="cdm-tag">Location entity — NEW</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════ NAV BAR ═══════════════ -->
+    <nav class="category-nav" id="queries">
+        <div class="container">
+            <button class="nav-pill active" data-cat="all">All Queries <span class="pill-count">20</span></button>
+            <button class="nav-pill" data-cat="cat1">Projections &amp; Selections <span
+                    class="pill-count">5</span></button>
+            <button class="nav-pill" data-cat="cat2">Aggregations <span class="pill-count">5</span></button>
+            <button class="nav-pill" data-cat="cat3">Joins <span class="pill-count">5</span></button>
+            <button class="nav-pill" data-cat="cat4">Nested Queries <span class="pill-count">5</span></button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════ QUERIES ═══════════════ -->
+    <main class="queries-section">
+        <div class="container">
+
+            <!-- ════════ CATEGORY 1 ════════ -->
+            <div class="category-header" data-cat="cat1">
+                <div class="cat-badge cat1-color">Category 1</div>
+                <h2>Projections &amp; Selections</h2>
+                <p>Using LIKE, IN, BETWEEN, DISTINCT</p>
+            </div>
+
+            <!-- Q1 -->
+            <article class="query-card" data-cat="cat1" id="q1">
+                <div class="query-header">
+                    <span class="query-num">Q1</span>
+                    <div>
+                        <h3>Customers Registered in 2024</h3>
+                        <p class="query-context">📣 Marketing wants to find all customers registered in 2024 for an
+                            anniversary email.</p>
+                    </div>
+                    <span class="query-tag tag-between">BETWEEN</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> last_name, first_name, email, registration_date
+<span class="kw">FROM</span> Customer
+<span class="kw">WHERE</span> registration_date <span class="kw">BETWEEN</span> <span class="str">'2024-01-01'</span> <span class="kw">AND</span> <span class="str">'2024-12-31'</span>
+<span class="kw">ORDER BY</span> registration_date <span class="kw">DESC</span>;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 4 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>last_name</th>
+                                        <th>first_name</th>
+                                        <th>email</th>
+                                        <th>registration_date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Moreau</td>
+                                        <td>Thomas</td>
+                                        <td>tom.moreau@email.com</td>
+                                        <td>2024-03-01</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bernard</td>
+                                        <td>Lucie</td>
+                                        <td>lucie.b@email.com</td>
+                                        <td>2024-02-20</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lefebvre</td>
+                                        <td>Marc</td>
+                                        <td>marc.lef@email.com</td>
+                                        <td>2024-02-05</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Martin</td>
+                                        <td>Sophie</td>
+                                        <td>sophie.m@email.com</td>
+                                        <td>2024-01-10</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q2 -->
+            <article class="query-card" data-cat="cat1" id="q2">
+                <div class="query-header">
+                    <span class="query-num">Q2</span>
+                    <div>
+                        <h3>Products Containing 'Wetsuit' in Description</h3>
+                        <p class="query-context">📣 Marketing wants to list all products containing 'wetsuit' in their
+                            description.</p>
+                    </div>
+                    <span class="query-tag tag-like">LIKE</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> product_name, product_price, product_stock
+<span class="kw">FROM</span> Product
+<span class="kw">WHERE</span> product_desc <span class="kw">LIKE</span> <span class="str">'%wetsuit%'</span>
+<span class="kw">ORDER BY</span> product_price <span class="kw">ASC</span>;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 2 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>product_name</th>
+                                        <th>product_price</th>
+                                        <th>product_stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Dawn Patrol 3/2</td>
+                                        <td>220.00</td>
+                                        <td>20</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Flashbomb Wetsuit 4/3</td>
+                                        <td>350.00</td>
+                                        <td>12</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q3 -->
+            <article class="query-card" data-cat="cat1" id="q3">
+                <div class="query-header">
+                    <span class="query-num">Q3</span>
+                    <div>
+                        <h3>Unique Delivery Cities</h3>
+                        <p class="query-context">🚚 Operations wants to see which unique cities we are delivering to for
+                            logistics planning.</p>
+                    </div>
+                    <span class="query-tag tag-distinct">DISTINCT</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT DISTINCT</span> l.city
+<span class="kw">FROM</span> Address a
+<span class="kw">INNER JOIN</span> Location l <span class="kw">ON</span> a.zip_code = l.zip_code
+<span class="kw">ORDER BY</span> l.city;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 5 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>city</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Arcachon</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Biarritz</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hossegor</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lacanau</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Saint-Jean-de-Luz</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q4 -->
+            <article class="query-card" data-cat="cat1" id="q4">
+                <div class="query-header">
+                    <span class="query-num">Q4</span>
+                    <div>
+                        <h3>Mid-Tier Products (€50–€200)</h3>
+                        <p class="query-context">📣 Marketing is looking for mid-tier products priced between 50 and
+                            200.</p>
+                    </div>
+                    <span class="query-tag tag-between">BETWEEN</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> product_name, product_price
+<span class="kw">FROM</span> Product
+<span class="kw">WHERE</span> product_price <span class="kw">BETWEEN</span> <span class="num">50</span> <span class="kw">AND</span> <span class="num">200</span>;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 2 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>product_name</th>
+                                        <th>product_price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>FCS II Performer</td>
+                                        <td>110.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Highline Boardshorts</td>
+                                        <td>65.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q5 -->
+            <article class="query-card" data-cat="cat1" id="q5">
+                <div class="query-header">
+                    <span class="query-num">Q5</span>
+                    <div>
+                        <h3>Management &amp; Sales Staff</h3>
+                        <p class="query-context">🚚 Operations wants the contact info for specific management &amp;
+                            sales staff.</p>
+                    </div>
+                    <span class="query-tag tag-in">IN</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> employee_name, employee_role
+<span class="kw">FROM</span> Employee
+<span class="kw">WHERE</span> employee_role <span class="kw">IN</span> (<span class="str">'Manager'</span>, <span class="str">'Product Specialist'</span>);</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 2 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>employee_name</th>
+                                        <th>employee_role</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>John Slater</td>
+                                        <td>Manager</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Alice Gilmore</td>
+                                        <td>Product Specialist</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- ════════ CATEGORY 2 ════════ -->
+            <div class="category-header" data-cat="cat2">
+                <div class="cat-badge cat2-color">Category 2</div>
+                <h2>Aggregations</h2>
+                <p>Using GROUP BY, HAVING, SUM, COUNT, AVG, MAX, MIN</p>
+            </div>
+
+            <!-- Q6 -->
+            <article class="query-card" data-cat="cat2" id="q6">
+                <div class="query-header">
+                    <span class="query-num">Q6</span>
+                    <div>
+                        <h3>Total Inventory Value per Brand</h3>
+                        <p class="query-context">📣 Marketing wants to calculate the total value of stock currently
+                            available per brand.</p>
+                    </div>
+                    <span class="query-tag tag-sum">SUM + GROUP BY</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> band_id, <span class="fn">SUM</span>(product_price * product_stock) <span class="kw">AS</span> total_inventory_value
+<span class="kw">FROM</span> Product
+<span class="kw">GROUP BY</span> band_id
+<span class="kw">ORDER BY</span> total_inventory_value <span class="kw">DESC</span>;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 5 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>band_id</th>
+                                        <th>total_inventory_value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1 <span class="fk-hint">(Rip Curl)</span></td>
+                                        <td>8,600.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4 <span class="fk-hint">(FCS)</span></td>
+                                        <td>5,050.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5 <span class="fk-hint">(JS Industries)</span></td>
+                                        <td>3,250.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2 <span class="fk-hint">(Quiksilver)</span></td>
+                                        <td>2,600.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3 <span class="fk-hint">(Billabong)</span></td>
+                                        <td>1,125.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q7 -->
+            <article class="query-card" data-cat="cat2" id="q7">
+                <div class="query-header">
+                    <span class="query-num">Q7</span>
+                    <div>
+                        <h3>Employees Managing &gt; 2 Products</h3>
+                        <p class="query-context">🚚 Operations wants to identify employees who manage/prepare more than
+                            2 distinct products.</p>
+                    </div>
+                    <span class="query-tag tag-having">HAVING + COUNT</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> employee_id, <span class="fn">COUNT</span>(product_id) <span class="kw">AS</span> total_products_managed
+<span class="kw">FROM</span> Product
+<span class="kw">GROUP BY</span> employee_id
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(product_id) > <span class="num">2</span>;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 2 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>employee_id</th>
+                                        <th>total_products_managed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2 <span class="fk-hint">(Alice Gilmore)</span></td>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3 <span class="fk-hint">(Bob Machado)</span></td>
+                                        <td>4</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q8 -->
+            <article class="query-card" data-cat="cat2" id="q8">
+                <div class="query-header">
+                    <span class="query-num">Q8</span>
+                    <div>
+                        <h3>Average Product Price per Category</h3>
+                        <p class="query-context">📣 Marketing wants to know the average product price for each product
+                            category.</p>
+                    </div>
+                    <span class="query-tag tag-avg">AVG + GROUP BY</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> category_id, <span class="fn">AVG</span>(product_price) <span class="kw">AS</span> average_price
+<span class="kw">FROM</span> Product
+<span class="kw">GROUP BY</span> category_id;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 4 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>category_id</th>
+                                        <th>average_price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1 <span class="fk-hint">(Surfboards)</span></td>
+                                        <td>650.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2 <span class="fk-hint">(Wetsuits)</span></td>
+                                        <td>285.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3 <span class="fk-hint">(Fins)</span></td>
+                                        <td>110.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4 <span class="fk-hint">(Accessories)</span></td>
+                                        <td>48.33</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q9 -->
+            <article class="query-card" data-cat="cat2" id="q9">
+                <div class="query-header">
+                    <span class="query-num">Q9</span>
+                    <div>
+                        <h3>Min &amp; Max Order Amounts</h3>
+                        <p class="query-context">🚚 Operations wants to see the minimum and maximum order amounts in the
+                            system.</p>
+                    </div>
+                    <span class="query-tag tag-minmax">MIN / MAX</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="cm">-- Dynamically calculated since total_amount was removed to respect 3NF</span>
+<span class="kw">SELECT</span> <span class="fn">MIN</span>(order_total) <span class="kw">AS</span> lowest_order, <span class="fn">MAX</span>(order_total) <span class="kw">AS</span> highest_order
+<span class="kw">FROM</span> (
+    <span class="kw">SELECT</span> <span class="fn">SUM</span>(purchased_quantity * locked_unit_price) <span class="kw">AS</span> order_total
+    <span class="kw">FROM</span> Contain
+    <span class="kw">GROUP BY</span> order_id
+) <span class="kw">AS</span> OrderTotals;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 1 row</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>lowest_order</th>
+                                        <th>highest_order</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>35.00</td>
+                                        <td>795.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q10 -->
+            <article class="query-card" data-cat="cat2" id="q10">
+                <div class="query-header">
+                    <span class="query-num">Q10</span>
+                    <div>
+                        <h3>Best-Selling Products (&gt; 1 Unit Sold)</h3>
+                        <p class="query-context">📣 Marketing wants to see which products have sold more than 1 unit
+                            total.</p>
+                    </div>
+                    <span class="query-tag tag-having">HAVING + SUM</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> product_id, <span class="fn">SUM</span>(purchased_quantity) <span class="kw">AS</span> total_sold
+<span class="kw">FROM</span> Contain
+<span class="kw">GROUP BY</span> product_id
+<span class="kw">HAVING</span> <span class="fn">SUM</span>(purchased_quantity) > <span class="num">1</span>;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 2 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>product_id</th>
+                                        <th>total_sold</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>4 <span class="fk-hint">(FCS II Performer)</span></td>
+                                        <td>2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5 <span class="fk-hint">(FCS Essential Leash)</span></td>
+                                        <td>2</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- ════════ CATEGORY 3 ════════ -->
+            <div class="category-header" data-cat="cat3">
+                <div class="cat-badge cat3-color">Category 3</div>
+                <h2>Joins</h2>
+                <p>Inner, Outer, Multiple, Self/Reflexive</p>
+            </div>
+
+            <!-- Q11 -->
+            <article class="query-card" data-cat="cat3" id="q11">
+                <div class="query-header">
+                    <span class="query-num">Q11</span>
+                    <div>
+                        <h3>Products &amp; Their Managing Employee</h3>
+                        <p class="query-context">🚚 Operations wants a list of products alongside the employee name who
+                            prepared/manages them.</p>
+                    </div>
+                    <span class="query-tag tag-inner">INNER JOIN</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> p.product_name, p.product_sku, e.employee_name
+<span class="kw">FROM</span> Product p
+<span class="kw">INNER JOIN</span> Employee e <span class="kw">ON</span> p.employee_id = e.employee_id;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 7 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>product_name</th>
+                                        <th>product_sku</th>
+                                        <th>employee_name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Monsta Box Surfboard</td>
+                                        <td>JS-MONSTA-01</td>
+                                        <td>Alice Gilmore</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Flashbomb Wetsuit 4/3</td>
+                                        <td>RC-WET-01</td>
+                                        <td>Alice Gilmore</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dawn Patrol 3/2</td>
+                                        <td>RC-WET-02</td>
+                                        <td>Bob Machado</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FCS II Performer</td>
+                                        <td>FCS-FIN-01</td>
+                                        <td>Bob Machado</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FCS Essential Leash</td>
+                                        <td>FCS-LEASH-01</td>
+                                        <td>Alice Gilmore</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Highline Boardshorts</td>
+                                        <td>QK-BOARDSHORT</td>
+                                        <td>Bob Machado</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Heritage Traction Pad</td>
+                                        <td>BB-PAD-01</td>
+                                        <td>Bob Machado</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q12 -->
+            <article class="query-card" data-cat="cat3" id="q12">
+                <div class="query-header">
+                    <span class="query-num">Q12</span>
+                    <div>
+                        <h3>Products Never Sold</h3>
+                        <p class="query-context">📣 Marketing wants to find products that have NEVER been sold (no order
+                            lines).</p>
+                    </div>
+                    <span class="query-tag tag-left">LEFT JOIN</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> p.product_name, p.product_sku
+<span class="kw">FROM</span> Product p
+<span class="kw">LEFT JOIN</span> Contain c <span class="kw">ON</span> p.product_id = c.product_id
+<span class="kw">WHERE</span> c.order_id <span class="kw">IS NULL</span>;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 1 row</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>product_name</th>
+                                        <th>product_sku</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Heritage Traction Pad</td>
+                                        <td>BB-PAD-01</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q13 -->
+            <article class="query-card" data-cat="cat3" id="q13">
+                <div class="query-header">
+                    <span class="query-num">Q13</span>
+                    <div>
+                        <h3>Detailed Order Receipts</h3>
+                        <p class="query-context">A detailed receipt view linking Orders, Customers, and Delivery City.
+                        </p>
+                    </div>
+                    <span class="query-tag tag-multi">MULTIPLE JOIN</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> o.order_id, c.last_name, c.first_name, l.city,
+       <span class="fn">SUM</span>(ct.purchased_quantity * ct.locked_unit_price) <span class="kw">AS</span> dynamic_total_amount
+<span class="kw">FROM</span> Order_ o
+<span class="kw">INNER JOIN</span> Address a  <span class="kw">ON</span> o.address_id   = a.address_id
+<span class="kw">INNER JOIN</span> Customer c <span class="kw">ON</span> a.customer_id  = c.customer_id
+<span class="kw">INNER JOIN</span> Location l <span class="kw">ON</span> a.zip_code     = l.zip_code
+<span class="kw">INNER JOIN</span> Contain ct  <span class="kw">ON</span> o.order_id    = ct.order_id
+<span class="kw">GROUP BY</span> o.order_id, c.last_name, c.first_name, l.city;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 5 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>order_id</th>
+                                        <th>last_name</th>
+                                        <th>first_name</th>
+                                        <th>city</th>
+                                        <th>dynamic_total_amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Dupont</td>
+                                        <td>Jean</td>
+                                        <td>Biarritz</td>
+                                        <td>795.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Martin</td>
+                                        <td>Sophie</td>
+                                        <td>Hossegor</td>
+                                        <td>220.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Lefebvre</td>
+                                        <td>Marc</td>
+                                        <td>Saint-Jean-de-Luz</td>
+                                        <td>110.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Dupont</td>
+                                        <td>Jean</td>
+                                        <td>Arcachon</td>
+                                        <td>35.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Bernard</td>
+                                        <td>Lucie</td>
+                                        <td>Lacanau</td>
+                                        <td>415.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q14 -->
+            <article class="query-card" data-cat="cat3" id="q14">
+                <div class="query-header">
+                    <span class="query-num">Q14</span>
+                    <div>
+                        <h3>Brands &amp; Categories in Order #1</h3>
+                        <p class="query-context">See exactly which Brand and Category are selling in Order #1.</p>
+                    </div>
+                    <span class="query-tag tag-multi">MULTIPLE JOIN</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> p.product_name, b.brand_name, cat.category_name, c.purchased_quantity
+<span class="kw">FROM</span> Contain c
+<span class="kw">INNER JOIN</span> Product p <span class="kw">ON</span> c.product_id = p.product_id
+<span class="kw">INNER JOIN</span> Brand b <span class="kw">ON</span> p.band_id = b.band_id
+<span class="kw">INNER JOIN</span> Category cat <span class="kw">ON</span> p.category_id = cat.category_id
+<span class="kw">WHERE</span> c.order_id = <span class="num">1</span>;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 3 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>product_name</th>
+                                        <th>brand_name</th>
+                                        <th>category_name</th>
+                                        <th>purchased_quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Monsta Box Surfboard</td>
+                                        <td>JS Industries</td>
+                                        <td>Surfboards</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FCS II Performer</td>
+                                        <td>FCS</td>
+                                        <td>Fins</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FCS Essential Leash</td>
+                                        <td>FCS</td>
+                                        <td>Accessories</td>
+                                        <td>1</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q15 -->
+            <article class="query-card" data-cat="cat3" id="q15">
+                <div class="query-header">
+                    <span class="query-num">Q15</span>
+                    <div>
+                        <h3>Surfboard &amp; Compatible Accessories</h3>
+                        <p class="query-context">📣 Marketing wants to see Surfboards alongside their recommended
+                            accessories.</p>
+                    </div>
+                    <span class="query-tag tag-reflex">REFLEXIVE JOIN</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> main.product_name <span class="kw">AS</span> Main_Product, acc.product_name <span class="kw">AS</span> Recommended_Accessory
+<span class="kw">FROM</span> Be_compatible bc
+<span class="kw">INNER JOIN</span> Product main <span class="kw">ON</span> bc.product_id = main.product_id
+<span class="kw">INNER JOIN</span> Product acc <span class="kw">ON</span> bc.product_id_1 = acc.product_id;</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 3 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Main_Product</th>
+                                        <th>Recommended_Accessory</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Monsta Box Surfboard</td>
+                                        <td>FCS II Performer</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Monsta Box Surfboard</td>
+                                        <td>FCS Essential Leash</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Monsta Box Surfboard</td>
+                                        <td>Heritage Traction Pad</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- ════════ CATEGORY 4 ════════ -->
+            <div class="category-header" data-cat="cat4">
+                <div class="cat-badge cat4-color">Category 4</div>
+                <h2>Nested Queries</h2>
+                <p>Using IN, NOT IN, EXISTS, ANY, ALL</p>
+            </div>
+
+            <!-- Q16 -->
+            <article class="query-card" data-cat="cat4" id="q16">
+                <div class="query-header">
+                    <span class="query-num">Q16</span>
+                    <div>
+                        <h3>Registered Customers with No Orders</h3>
+                        <p class="query-context">📣 Marketing wants to find Customers who have registered but never
+                            placed an order.</p>
+                    </div>
+                    <span class="query-tag tag-notin">NOT IN</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> customer_id, first_name, last_name, email
+<span class="kw">FROM</span> Customer
+<span class="kw">WHERE</span> customer_id <span class="kw">NOT IN</span> (
+    <span class="kw">SELECT</span> a.customer_id
+    <span class="kw">FROM</span> Order_ o
+    <span class="kw">INNER JOIN</span> Address a <span class="kw">ON</span> o.address_id = a.address_id
+);</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 1 row</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>customer_id</th>
+                                        <th>first_name</th>
+                                        <th>last_name</th>
+                                        <th>email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Thomas</td>
+                                        <td>Moreau</td>
+                                        <td>tom.moreau@email.com</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q17 -->
+            <article class="query-card" data-cat="cat4" id="q17">
+                <div class="query-header">
+                    <span class="query-num">Q17</span>
+                    <div>
+                        <h3>Premium Products (More Expensive Than ALL Wetsuits)</h3>
+                        <p class="query-context">Find the premium products that cost more than ALL wetsuits.</p>
+                    </div>
+                    <span class="query-tag tag-all">ALL</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> product_name, product_price
+<span class="kw">FROM</span> Product
+<span class="kw">WHERE</span> product_price > <span class="kw">ALL</span> (
+    <span class="kw">SELECT</span> p.product_price
+    <span class="kw">FROM</span> Product p
+    <span class="kw">INNER JOIN</span> Category c <span class="kw">ON</span> p.category_id = c.category_id
+    <span class="kw">WHERE</span> c.category_name = <span class="str">'Wetsuits'</span>
+);</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 1 row</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>product_name</th>
+                                        <th>product_price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Monsta Box Surfboard</td>
+                                        <td>650.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q18 -->
+            <article class="query-card" data-cat="cat4" id="q18">
+                <div class="query-header">
+                    <span class="query-num">Q18</span>
+                    <div>
+                        <h3>Brands with Out-of-Stock Products</h3>
+                        <p class="query-context">Find brands that currently have products out of stock (stock = 0).</p>
+                    </div>
+                    <span class="query-tag tag-exists">EXISTS</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> brand_name
+<span class="kw">FROM</span> Brand b
+<span class="kw">WHERE EXISTS</span> (
+    <span class="kw">SELECT</span> <span class="num">1</span>
+    <span class="kw">FROM</span> Product p
+    <span class="kw">WHERE</span> p.band_id = b.band_id <span class="kw">AND</span> p.product_stock = <span class="num">0</span>
+);</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot amber"></span>Result — 0 rows (empty set)</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>brand_name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="empty-result" colspan="1">✅ No brands with out-of-stock products —
+                                            all inventory is healthy!</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q19 -->
+            <article class="query-card" data-cat="cat4" id="q19">
+                <div class="query-header">
+                    <span class="query-num">Q19</span>
+                    <div>
+                        <h3>Customers Who Bought 'FCS' Brand</h3>
+                        <p class="query-context">📣 Marketing wants to target customers who bought a specific brand
+                            ('FCS').</p>
+                    </div>
+                    <span class="query-tag tag-in">IN (Subquery)</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT DISTINCT</span> c.first_name, c.last_name, c.email
+<span class="kw">FROM</span> Customer c
+<span class="kw">WHERE</span> c.customer_id <span class="kw">IN</span> (
+    <span class="kw">SELECT</span> a.customer_id
+    <span class="kw">FROM</span> Order_ o
+    <span class="kw">INNER JOIN</span> Address a  <span class="kw">ON</span> o.address_id  = a.address_id
+    <span class="kw">INNER JOIN</span> Contain ct <span class="kw">ON</span> o.order_id    = ct.order_id
+    <span class="kw">INNER JOIN</span> Product p  <span class="kw">ON</span> ct.product_id = p.product_id
+    <span class="kw">INNER JOIN</span> Brand b    <span class="kw">ON</span> p.band_id     = b.band_id
+    <span class="kw">WHERE</span> b.brand_name = <span class="str">'FCS'</span>
+);</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 2 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>first_name</th>
+                                        <th>last_name</th>
+                                        <th>email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Jean</td>
+                                        <td>Dupont</td>
+                                        <td>jean.dupont@email.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Marc</td>
+                                        <td>Lefebvre</td>
+                                        <td>marc.lef@email.com</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Q20 -->
+            <article class="query-card" data-cat="cat4" id="q20">
+                <div class="query-header">
+                    <span class="query-num">Q20</span>
+                    <div>
+                        <h3>Add-On Products (Cheaper Than ANY Surfboard)</h3>
+                        <p class="query-context">Find products that are cheaper than ANY surfboard (to recommend as
+                            add-ons).</p>
+                    </div>
+                    <span class="query-tag tag-any">ANY</span>
+                </div>
+                <div class="query-body">
+                    <div class="sql-block">
+                        <div class="sql-label"><span class="dot"></span>SQL Query</div>
+                        <pre><code><span class="kw">SELECT</span> product_name, product_price
+<span class="kw">FROM</span> Product
+<span class="kw">WHERE</span> category_id != <span class="num">1</span> <span class="cm">-- Not a surfboard itself</span>
+<span class="kw">AND</span> product_price &lt; <span class="kw">ANY</span> (
+    <span class="kw">SELECT</span> p.product_price
+    <span class="kw">FROM</span> Product p
+    <span class="kw">INNER JOIN</span> Category c <span class="kw">ON</span> p.category_id = c.category_id
+    <span class="kw">WHERE</span> c.category_name = <span class="str">'Surfboards'</span>
+);</code></pre>
+                    </div>
+                    <div class="result-block">
+                        <div class="result-label"><span class="dot green"></span>Result — 6 rows</div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>product_name</th>
+                                        <th>product_price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Flashbomb Wetsuit 4/3</td>
+                                        <td>350.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dawn Patrol 3/2</td>
+                                        <td>220.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FCS II Performer</td>
+                                        <td>110.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FCS Essential Leash</td>
+                                        <td>35.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Highline Boardshorts</td>
+                                        <td>65.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Heritage Traction Pad</td>
+                                        <td>45.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <!-- ═══════════════ SQL SOURCE FILES ═══════════════ -->
+    <section class="sql-files-section" id="sql-files">
+        <div class="container">
+            <h2 class="section-title">SQL Source <span class="gradient-text">Files</span></h2>
+            <p class="section-desc">Browse all 4 SQL files used to build and run the Surf Shop database.</p>
+
+            <!-- Tab buttons -->
+            <div class="sql-tabs">
+                <button class="sql-tab active" data-file="file1">
+                    <span class="file-num">01</span>
+                    <span class="file-info">
+                        <span class="file-name">1_creation.sql</span>
+                        <span class="file-desc">Table Creation (PDM)</span>
+                    </span>
+                </button>
+                <button class="sql-tab" data-file="file2">
+                    <span class="file-num">02</span>
+                    <span class="file-info">
+                        <span class="file-name">2_contraintes.sql</span>
+                        <span class="file-desc">Validation Constraints</span>
+                    </span>
+                </button>
+                <button class="sql-tab" data-file="file3">
+                    <span class="file-num">03</span>
+                    <span class="file-info">
+                        <span class="file-name">3_insertion.sql</span>
+                        <span class="file-desc">Data Insertion</span>
+                    </span>
+                </button>
+                <button class="sql-tab" data-file="file4">
+                    <span class="file-num">04</span>
+                    <span class="file-info">
+                        <span class="file-name">4_interrogation.sql</span>
+                        <span class="file-desc">Querying (20 queries)</span>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Tab panels -->
+            <div class="sql-file-panel active" id="file1">
+                <div class="file-panel-header">
+                    <div class="file-panel-title">
+                        <span class="file-dot dot-blue"></span>
+                        <strong>1_creation.sql</strong>
+                        <span class="file-step-badge">Step 3A — Physical Data Model</span>
+                    </div>
+                    <button class="copy-btn" data-target="file1">Copy</button>
+                </div>
+                <pre class="file-code" id="code-file1"><code>-- =========================================================================
+-- Step 3A: Physical Data Model (PDM) - Table Creation
+-- =========================================================================
+
+DROP TABLE IF EXISTS Be_compatible;
+DROP TABLE IF EXISTS Contain;
+DROP TABLE IF EXISTS Product;
+DROP TABLE IF EXISTS Order_;
+DROP TABLE IF EXISTS Address;
+DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS Category;
+DROP TABLE IF EXISTS Brand;
+DROP TABLE IF EXISTS Employee;
+
+CREATE TABLE Customer (
+    customer_id       INT PRIMARY KEY,
+    last_name         VARCHAR(50)  NOT NULL,
+    first_name        VARCHAR(50)  NOT NULL,
+    email             VARCHAR(100) NOT NULL UNIQUE,
+    phone_number      VARCHAR(15),
+    password          VARCHAR(255) NOT NULL,
+    registration_date DATE         NOT NULL
+);
+
+CREATE TABLE Location (
+    zip_code VARCHAR(10) PRIMARY KEY,
+    city VARCHAR(50) NOT NULL,
+    country VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Address (
+    address_id  INT PRIMARY KEY,
+    street      VARCHAR(150) NOT NULL,
+    zip_code    VARCHAR(10)  NOT NULL,
+    city        VARCHAR(50)  NOT NULL,
+    country     VARCHAR(50)  NOT NULL,
+    customer_id INT          NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Category (
+    category_id   INT PRIMARY KEY,
+    category_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE Brand (
+    band_id    INT PRIMARY KEY,
+    brand_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE Employee (
+    employee_id   INT PRIMARY KEY,
+    employee_name VARCHAR(50) NOT NULL,
+    employee_role VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Product (
+    product_id   INT PRIMARY KEY,
+    product_sku  VARCHAR(30)    NOT NULL UNIQUE,
+    product_name VARCHAR(100)   NOT NULL,
+    product_desc VARCHAR(500),
+    product_price DECIMAL(15,2) NOT NULL,
+    product_stock INT           NOT NULL,
+    product_size  VARCHAR(20),
+    employee_id   INT           NOT NULL,
+    band_id       INT           NOT NULL,
+    category_id   INT           NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES Employee(employee_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (band_id)     REFERENCES Brand(band_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES Category(category_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE Order_ (
+    order_id     INT PRIMARY KEY,
+    order_date   DATE         NOT NULL,
+    order_status VARCHAR(20)  NOT NULL,
+    total_amount INT          NOT NULL,
+    address_id   INT          NOT NULL,
+    customer_id  INT          NOT NULL,
+    FOREIGN KEY (address_id)  REFERENCES Address(address_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
+        ON DELETE CASCADE  ON UPDATE CASCADE
+);
+
+CREATE TABLE Contain (
+    order_id          INT            NOT NULL,
+    product_id        INT            NOT NULL,
+    purchased_quantity INT           NOT NULL,
+    locked_unit_price DECIMAL(15,2)  NOT NULL,
+    PRIMARY KEY (order_id, product_id),
+    FOREIGN KEY (order_id)   REFERENCES Order_(order_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES Product(product_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE Be_compatible (
+    product_id   INT NOT NULL,
+    product_id_1 INT NOT NULL,
+    PRIMARY KEY (product_id, product_id_1),
+    FOREIGN KEY (product_id)   REFERENCES Product(product_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (product_id_1) REFERENCES Product(product_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);</code></pre>
+            </div>
+
+            <div class="sql-file-panel" id="file2">
+                <div class="file-panel-header">
+                    <div class="file-panel-title">
+                        <span class="file-dot dot-purple"></span>
+                        <strong>2_contraintes.sql</strong>
+                        <span class="file-step-badge">Step 3B — Validation Constraints</span>
+                    </div>
+                    <button class="copy-btn" data-target="file2">Copy</button>
+                </div>
+                <pre class="file-code" id="code-file2"><code>-- =========================================================================
+-- Step 3B: Validation Constraints
+-- Ensuring data integrity and applying business rules
+-- =========================================================================
+
+-- 1. Ensure email has a valid basic format (contains @ and .)
+ALTER TABLE Customer
+ADD CONSTRAINT chk_customer_email
+CHECK (email LIKE '%_@__%.__%');
+
+-- 2. Ensure product price is strictly positive
+ALTER TABLE Product
+ADD CONSTRAINT chk_product_price
+CHECK (product_price > 0);
+
+-- 3. Ensure stock cannot be negative
+ALTER TABLE Product
+ADD CONSTRAINT chk_product_stock
+CHECK (product_stock >= 0);
+
+-- 4. Order statuses must belong to a specific predefined list
+ALTER TABLE Order_
+ADD CONSTRAINT chk_order_status
+CHECK (order_status IN ('Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'));
+
+-- 5. An order line must have at least 1 item purchased
+ALTER TABLE Contain
+ADD CONSTRAINT chk_purchased_quantity
+CHECK (purchased_quantity >= 1);
+
+-- 6. The locked unit price at the time of purchase cannot be negative
+ALTER TABLE Contain
+ADD CONSTRAINT chk_locked_price
+CHECK (locked_unit_price >= 0);</code></pre>
+            </div>
+
+            <div class="sql-file-panel" id="file3">
+                <div class="file-panel-header">
+                    <div class="file-panel-title">
+                        <span class="file-dot dot-green"></span>
+                        <strong>3_insertion.sql</strong>
+                        <span class="file-step-badge">Step 4 — Data Insertion</span>
+                    </div>
+                    <button class="copy-btn" data-target="file3">Copy</button>
+                </div>
+                <pre class="file-code" id="code-file3"><code>-- =========================================================================
+-- Step 4: Data Insertion
+-- Adapted to the specific datatypes and FK relationships of the Looping LDM
+-- =========================================================================
+
+-- INSERT BRANDS (using band_id as per LDM)
+INSERT INTO Brand (band_id, brand_name) VALUES
+(1, 'Rip Curl'),
+(2, 'Quiksilver'),
+(3, 'Billabong'),
+(4, 'FCS'),
+(5, 'JS Industries');
+
+-- INSERT CATEGORIES
+INSERT INTO Category (category_id, category_name) VALUES
+(1, 'Surfboards'),
+(2, 'Wetsuits'),
+(3, 'Fins'),
+(4, 'Accessories');
+
+-- INSERT EMPLOYEES
+INSERT INTO Employee (employee_id, employee_name, employee_role) VALUES
+(1, 'John Slater',   'Manager'),
+(2, 'Alice Gilmore', 'Product Specialist'),
+(3, 'Bob Machado',   'Warehouse Prep');
+
+-- INSERT CUSTOMERS
+INSERT INTO Customer (customer_id, last_name, first_name, email, phone_number, password, registration_date) VALUES
+(1, 'Dupont',   'Jean',   'jean.dupont@email.com', '0601020304', 'hashedpass123', '2023-11-15'),
+(2, 'Martin',   'Sophie', 'sophie.m@email.com',    '0611223344', 'hashedpass456', '2024-01-10'),
+(3, 'Lefebvre', 'Marc',   'marc.lef@email.com',    '0699887766', 'hashedpass789', '2024-02-05'),
+(4, 'Bernard',  'Lucie',  'lucie.b@email.com',     '0644556677', 'hashedpass321', '2024-02-20'),
+(5, 'Moreau',   'Thomas', 'tom.moreau@email.com',  '0622334455', 'hashedpass654', '2024-03-01');
+
+-- INSERT ADDRESSES
+INSERT INTO Address (address_id, street, zip_code, city, country, customer_id) VALUES
+(1, '10 Avenue de la Plage',      '64200', 'Biarritz',          'France', 1),
+(2, '5 Rue des Mouettes',         '33120', 'Arcachon',          'France', 1),
+(3, '15 Boulevard de l''Océan',   '40150', 'Hossegor',          'France', 2),
+(4, '8 Rue du Spot',              '64500', 'Saint-Jean-de-Luz', 'France', 3),
+(5, '22 Chemin des Dunes',        '33680', 'Lacanau',           'France', 4),
+(6, '3 Place de la Glisse',       '64200', 'Biarritz',          'France', 5);
+
+-- INSERT PRODUCTS (includes employee_id and band_id as per LDM)
+INSERT INTO Product (product_id, product_sku, product_name, product_desc, product_price, product_stock, product_size, employee_id, band_id, category_id) VALUES
+(1, 'JS-MONSTA-01',   'Monsta Box Surfboard',  'High performance shortboard',  650.00, 5,  '5''10',   2, 5, 1),
+(2, 'RC-WET-01',      'Flashbomb Wetsuit 4/3', 'Winter wetsuit, quick dry',    350.00, 12, 'M',       2, 1, 2),
+(3, 'RC-WET-02',      'Dawn Patrol 3/2',       'Spring wetsuit',               220.00, 20, 'L',       3, 1, 2),
+(4, 'FCS-FIN-01',     'FCS II Performer',      'Thruster fin set',             110.00, 30, 'Medium',  3, 4, 3),
+(5, 'FCS-LEASH-01',   'FCS Essential Leash',   '6ft regular leash',             35.00, 50, '6ft',     2, 4, 4),
+(6, 'QK-BOARDSHORT',  'Highline Boardshorts',  'Stretch boardshorts',           65.00, 40, '32',      3, 2, 4),
+(7, 'BB-PAD-01',      'Heritage Traction Pad', '3-piece tail pad',              45.00, 25, 'One Size', 3, 3, 4);
+
+-- INSERT COMPATIBILITIES (Reflexive link)
+INSERT INTO Be_compatible (product_id, product_id_1) VALUES
+(1, 4), -- Monsta Box compatible with FCS II Fins
+(1, 5), -- Monsta Box compatible with FCS Leash
+(1, 7); -- Monsta Box compatible with Traction Pad
+
+-- INSERT ORDERS (total_amount is an INT as per LDM)
+INSERT INTO Order_ (order_id, order_date, order_status, total_amount, address_id, customer_id) VALUES
+(1, '2024-03-05', 'Delivered',  795, 1, 1),
+(2, '2024-03-08', 'Shipped',    220, 3, 2),
+(3, '2024-03-10', 'Processing', 110, 4, 3),
+(4, '2024-03-12', 'Pending',     35, 2, 1),
+(5, '2024-03-15', 'Delivered',  415, 5, 4);
+
+-- INSERT ORDER LINES (CONTAIN)
+INSERT INTO Contain (order_id, product_id, purchased_quantity, locked_unit_price) VALUES
+(1, 1, 1, 650.00),
+(1, 4, 1, 110.00),
+(1, 5, 1,  35.00),
+(2, 3, 1, 220.00),
+(3, 4, 1, 110.00),
+(4, 5, 1,  35.00),
+(5, 2, 1, 350.00),
+(5, 6, 1,  65.00);</code></pre>
+            </div>
+
+            <div class="sql-file-panel" id="file4">
+                <div class="file-panel-header">
+                    <div class="file-panel-title">
+                        <span class="file-dot dot-orange"></span>
+                        <strong>4_interrogation.sql</strong>
+                        <span class="file-step-badge">Step 5 — Querying (20 queries)</span>
+                    </div>
+                    <button class="copy-btn" data-target="file4">Copy</button>
+                </div>
+                <pre class="file-code" id="code-file4"><code>-- =========================================================================
+-- Step 5: Database Querying
+-- Scenario: Marketing & Operations Data Extraction
+-- =========================================================================
+
+-- =========================================================================
+-- CATEGORY 1: PROJECTIONS & SELECTIONS (Using LIKE, IN, BETWEEN, DISTINCT)
+-- =========================================================================
+
+-- 1. Marketing wants to find all customers registered in 2024 for an anniversary email.
+SELECT last_name, first_name, email, registration_date
+FROM Customer
+WHERE registration_date BETWEEN '2024-01-01' AND '2024-12-31'
+ORDER BY registration_date DESC;
+
+-- 2. Marketing wants to list all products containing 'wetsuit' in their description.
+SELECT product_name, product_price, product_stock
+FROM Product
+WHERE product_desc LIKE '%wetsuit%'
+ORDER BY product_price ASC;
+
+-- 3. Operations wants to see which unique cities we are delivering to for logistics planning.
+SELECT DISTINCT city
+FROM Address
+ORDER BY city;
+
+-- 4. Marketing is looking for mid-tier products priced between 50 and 200.
+SELECT product_name, product_price
+FROM Product
+WHERE product_price BETWEEN 50 AND 200;
+
+-- 5. Operations wants the contact info for specific management & sales staff.
+SELECT employee_name, employee_role
+FROM Employee
+WHERE employee_role IN ('Manager', 'Product Specialist');
+
+
+-- =========================================================================
+-- CATEGORY 2: AGGREGATIONS (Using GROUP BY, HAVING, SUM, COUNT, AVG, MAX, MIN)
+-- =========================================================================
+
+-- 6. Marketing wants to calculate the total value of stock currently available per brand.
+SELECT band_id, SUM(product_price * product_stock) AS total_inventory_value
+FROM Product
+GROUP BY band_id
+ORDER BY total_inventory_value DESC;
+
+-- 7. Operations wants to identify employees who manage/prepare more than 2 distinct products.
+SELECT employee_id, COUNT(product_id) AS total_products_managed
+FROM Product
+GROUP BY employee_id
+HAVING COUNT(product_id) > 2;
+
+-- 8. Marketing wants to know the average product price for each product category.
+SELECT category_id, AVG(product_price) AS average_price
+FROM Product
+GROUP BY category_id;
+
+-- 9. Operations wants to see the minimum and maximum order amounts in the system.
+SELECT MIN(total_amount) AS lowest_order, MAX(total_amount) AS highest_order
+FROM Order_;
+
+-- 10. Marketing wants to see which products have sold more than 1 unit total.
+SELECT product_id, SUM(purchased_quantity) AS total_sold
+FROM Contain
+GROUP BY product_id
+HAVING SUM(purchased_quantity) > 1;
+
+
+-- =========================================================================
+-- CATEGORY 3: JOINS (Inner, Outer, Multiple, Self/Reflexive)
+-- =========================================================================
+
+-- 11. INNER JOIN: Operations wants a list of products alongside the employee name who manages them.
+SELECT p.product_name, p.product_sku, e.employee_name
+FROM Product p
+INNER JOIN Employee e ON p.employee_id = e.employee_id;
+
+-- 12. LEFT OUTER JOIN: Marketing wants to find products that have NEVER been sold.
+SELECT p.product_name, p.product_sku
+FROM Product p
+LEFT JOIN Contain c ON p.product_id = c.product_id
+WHERE c.order_id IS NULL;
+
+-- 13. MULTIPLE JOIN: A detailed receipt view linking Orders, Customers, and Delivery City.
+SELECT o.order_id, c.last_name, c.first_name, a.city, o.total_amount
+FROM Order_ o
+INNER JOIN Customer c ON o.customer_id = c.customer_id
+INNER JOIN Address a  ON o.address_id  = a.address_id;
+
+-- 14. MULTIPLE JOIN: See exactly which Brand and Category are selling in Order #1.
+SELECT p.product_name, b.brand_name, cat.category_name, c.purchased_quantity
+FROM Contain c
+INNER JOIN Product  p   ON c.product_id   = p.product_id
+INNER JOIN Brand    b   ON p.band_id       = b.band_id
+INNER JOIN Category cat ON p.category_id  = cat.category_id
+WHERE c.order_id = 1;
+
+-- 15. REFLEXIVE JOIN: Marketing wants to see Surfboards alongside their recommended accessories.
+SELECT main.product_name AS Main_Product, acc.product_name AS Recommended_Accessory
+FROM Be_compatible bc
+INNER JOIN Product main ON bc.product_id   = main.product_id
+INNER JOIN Product acc  ON bc.product_id_1 = acc.product_id;
+
+
+-- =========================================================================
+-- CATEGORY 4: NESTED QUERIES (IN, NOT IN, EXISTS, ANY, ALL)
+-- =========================================================================
+
+-- 16. NOT IN: Marketing wants to find Customers who have registered but never placed an order.
+SELECT customer_id, first_name, last_name, email
+FROM Customer
+WHERE customer_id NOT IN (SELECT customer_id FROM Order_);
+
+-- 17. ALL: Find the premium products that cost more than ALL wetsuits.
+SELECT product_name, product_price
+FROM Product
+WHERE product_price > ALL (
+    SELECT p.product_price
+    FROM Product p
+    INNER JOIN Category c ON p.category_id = c.category_id
+    WHERE c.category_name = 'Wetsuits'
+);
+
+-- 18. EXISTS: Find brands that currently have products out of stock (stock = 0).
+SELECT brand_name
+FROM Brand b
+WHERE EXISTS (
+    SELECT 1
+    FROM Product p
+    WHERE p.band_id = b.band_id AND p.product_stock = 0
+);
+
+-- 19. IN: Marketing wants to target customers who bought a specific brand ('FCS').
+SELECT DISTINCT c.first_name, c.last_name, c.email
+FROM Customer c
+WHERE c.customer_id IN (
+    SELECT o.customer_id
+    FROM Order_ o
+    INNER JOIN Contain ct ON o.order_id   = ct.order_id
+    INNER JOIN Product p  ON ct.product_id = p.product_id
+    INNER JOIN Brand b    ON p.band_id     = b.band_id
+    WHERE b.brand_name = 'FCS'
+);
+
+-- 20. ANY: Find products that are cheaper than ANY surfboard (to recommend as add-ons).
+SELECT product_name, product_price
+FROM Product
+WHERE category_id != 1 -- Not a surfboard itself
+AND product_price < ANY (
+    SELECT p.product_price
+    FROM Product p
+    INNER JOIN Category c ON p.category_id = c.category_id
+    WHERE c.category_name = 'Surfboards'
+);</code></pre>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer class="footer">
+        <div class="container">
+            <p>🏄‍♂️ <strong>Surf Shop Database Mini-Project</strong> — EFREI Paris</p>
+            <p>Maxime GASCHET &amp; Mathys CUEVAS-YIM · 2026</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
