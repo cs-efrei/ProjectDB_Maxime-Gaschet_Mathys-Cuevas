@@ -2,6 +2,8 @@
 
 > **Group Members:** Maxime GASCHET & Mathys CUEVAS-YIM
 
+> You can directly visualize the main points of our Data Base downloading the SurfShop
+
 ---
 
 ## 📋 Table of Contents
