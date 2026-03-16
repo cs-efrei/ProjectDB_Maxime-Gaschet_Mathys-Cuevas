@@ -1,8 +1,7 @@
 # 🏄‍♂️ Database Mini-Project: Surf Shop
 
 > **Group Members:** Maxime GASCHET & Mathys CUEVAS-YIM
-
-> You can directly visualize the main points of our Data Base downloading the ##surf-shop-db-showcase file
+ You can directly visualize the main points of our Data Base downloading the surf-shop-db-showcase file
 
 ---
 
