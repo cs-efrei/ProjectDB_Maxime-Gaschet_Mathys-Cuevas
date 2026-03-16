@@ -1,9 +1,9 @@
 -- =========================================================================
--- Step 4: Data Insertion
--- Adapted to the specific datatypes and FK relationships of the Looping LDM
+-- Step 4: Data Insertion 
+-- Adapted to the strict 3NF datatypes and FK relationships
 -- =========================================================================
 
--- INSERT BRANDS (using band_id as per LDM)
+-- INSERT BRANDS 
 INSERT INTO Brand (band_id, brand_name) VALUES
 (1, 'Rip Curl'),
 (2, 'Quiksilver'),
@@ -32,16 +32,24 @@ INSERT INTO Customer (customer_id, last_name, first_name, email, phone_number, p
 (4, 'Bernard', 'Lucie', 'lucie.b@email.com', '0644556677', 'hashedpass321', '2024-02-20'),
 (5, 'Moreau', 'Thomas', 'tom.moreau@email.com', '0622334455', 'hashedpass654', '2024-03-01');
 
--- INSERT ADDRESSES
-INSERT INTO Address (address_id, street, zip_code, city, country, customer_id) VALUES
-(1, '10 Avenue de la Plage', '64200', 'Biarritz', 'France', 1),
-(2, '5 Rue des Mouettes', '33120', 'Arcachon', 'France', 1),
-(3, '15 Boulevard de l''Océan', '40150', 'Hossegor', 'France', 2),
-(4, '8 Rue du Spot', '64500', 'Saint-Jean-de-Luz', 'France', 3),
-(5, '22 Chemin des Dunes', '33680', 'Lacanau', 'France', 4),
-(6, '3 Place de la Glisse', '64200', 'Biarritz', 'France', 5);
+-- INSERT LOCATIONS (New table to achieve 3NF)
+INSERT INTO Location (zip_code, city, country) VALUES
+('64200', 'Biarritz', 'France'),
+('33120', 'Arcachon', 'France'),
+('40150', 'Hossegor', 'France'),
+('64500', 'Saint-Jean-de-Luz', 'France'),
+('33680', 'Lacanau', 'France');
 
--- INSERT PRODUCTS (includes employee_id and band_id as per LDM)
+-- INSERT ADDRESSES (Modified to link to Location via zip_code)
+INSERT INTO Address (address_id, street, zip_code, customer_id) VALUES
+(1, '10 Avenue de la Plage', '64200', 1),
+(2, '5 Rue des Mouettes', '33120', 1),
+(3, '15 Boulevard de l''Ocean', '40150', 2),
+(4, '8 Rue du Spot', '64500', 3),
+(5, '22 Chemin des Dunes', '33680', 4),
+(6, '3 Place de la Glisse', '64200', 5);
+
+-- INSERT PRODUCTS
 INSERT INTO Product (product_id, product_sku, product_name, product_desc, product_price, product_stock, product_size, employee_id, band_id, category_id) VALUES
 (1, 'JS-MONSTA-01', 'Monsta Box Surfboard', 'High performance shortboard', 650.00, 5, '5''10', 2, 5, 1),
 (2, 'RC-WET-01', 'Flashbomb Wetsuit 4/3', 'Winter wetsuit, quick dry', 350.00, 12, 'M', 2, 1, 2),
@@ -51,19 +59,19 @@ INSERT INTO Product (product_id, product_sku, product_name, product_desc, produc
 (6, 'QK-BOARDSHORT', 'Highline Boardshorts', 'Stretch boardshorts', 65.00, 40, '32', 3, 2, 4),
 (7, 'BB-PAD-01', 'Heritage Traction Pad', '3-piece tail pad', 45.00, 25, 'One Size', 3, 3, 4);
 
--- INSERT COMPATIBILITIES (Reflexive link Be_compatible uses product_id and product_id_1)
+-- INSERT COMPATIBILITIES 
 INSERT INTO Be_compatible (product_id, product_id_1) VALUES
 (1, 4), -- Monsta Box compatible with FCS II Fins
 (1, 5), -- Monsta Box compatible with FCS Leash
 (1, 7); -- Monsta Box compatible with Traction Pad
 
--- INSERT ORDERS (total_amount is an INT as per LDM)
-INSERT INTO Order_ (order_id, order_date, order_status, total_amount, address_id, customer_id) VALUES
-(1, '2024-03-05', 'Delivered', 795, 1, 1),
-(2, '2024-03-08', 'Shipped', 220, 3, 2),
-(3, '2024-03-10', 'Processing', 110, 4, 3),
-(4, '2024-03-12', 'Pending', 35, 2, 1),
-(5, '2024-03-15', 'Delivered', 415, 5, 4);
+-- INSERT ORDERS (Removed total_amount and customer_id for strict 3NF)
+INSERT INTO Order_ (order_id, order_date, order_status, address_id) VALUES
+(1, '2024-03-05', 'Delivered', 1),
+(2, '2024-03-08', 'Shipped', 3),
+(3, '2024-03-10', 'Processing', 4),
+(4, '2024-03-12', 'Pending', 2),
+(5, '2024-03-15', 'Delivered', 5);
 
 -- INSERT ORDER LINES (CONTAIN)
 INSERT INTO Contain (order_id, product_id, purchased_quantity, locked_unit_price) VALUES
