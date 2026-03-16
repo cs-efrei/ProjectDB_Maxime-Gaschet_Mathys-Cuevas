@@ -1,6 +1,7 @@
 -- =========================================================================
 -- Step 5: Database Querying
 -- Scenario: Marketing & Operations Data Extraction
+-- Adapted for strict 3NF (transitive links and calculated columns)
 -- =========================================================================
 
 -- =========================================================================
@@ -20,9 +21,10 @@ WHERE product_desc LIKE '%wetsuit%'
 ORDER BY product_price ASC;
 
 -- 3. Operations wants to see which unique cities we are delivering to for logistics planning.
-SELECT DISTINCT city 
-FROM Address
-ORDER BY city;
+SELECT DISTINCT l.city 
+FROM Address a
+INNER JOIN Location l ON a.zip_code = l.zip_code
+ORDER BY l.city;
 
 -- 4. Marketing is looking for mid-tier products priced between 50 and 200.
 SELECT product_name, product_price
@@ -57,8 +59,13 @@ FROM Product
 GROUP BY category_id;
 
 -- 9. Operations wants to see the minimum and maximum order amounts in the system.
-SELECT MIN(total_amount) AS lowest_order, MAX(total_amount) AS highest_order
-FROM Order_;
+-- (Dynamically calculated since total_amount was removed to respect 3NF)
+SELECT MIN(order_total) AS lowest_order, MAX(order_total) AS highest_order
+FROM (
+    SELECT SUM(purchased_quantity * locked_unit_price) AS order_total
+    FROM Contain
+    GROUP BY order_id
+) AS OrderTotals;
 
 -- 10. Marketing wants to see which products have sold more than 1 unit total.
 SELECT product_id, SUM(purchased_quantity) AS total_sold
@@ -71,22 +78,25 @@ HAVING SUM(purchased_quantity) > 1;
 -- CATEGORY 3: JOINS (Inner, Outer, Multiple, Self/Reflexive)
 -- =========================================================================
 
--- 11. INNER JOIN: Operations wants a list of products alongside the employee name who prepared/manages them.
+-- 11. INNER JOIN: Operations wants a list of products alongside the employee name who manages them.
 SELECT p.product_name, p.product_sku, e.employee_name
 FROM Product p
 INNER JOIN Employee e ON p.employee_id = e.employee_id;
 
--- 12. LEFT OUTER JOIN: Marketing wants to find products that have NEVER been sold (no order lines).
+-- 12. LEFT OUTER JOIN: Marketing wants to find products that have NEVER been sold.
 SELECT p.product_name, p.product_sku
 FROM Product p
 LEFT JOIN Contain c ON p.product_id = c.product_id
 WHERE c.order_id IS NULL;
 
--- 13. MULTIPLE JOIN: A detailed receipt view linking Orders, Customers, and Delivery City.
-SELECT o.order_id, c.last_name, c.first_name, a.city, o.total_amount
+-- 13. MULTIPLE JOIN: A detailed receipt view linking Orders, Customers, Delivery City, and Total.
+SELECT o.order_id, c.last_name, c.first_name, l.city, SUM(ct.purchased_quantity * ct.locked_unit_price) AS dynamic_total_amount
 FROM Order_ o
-INNER JOIN Customer c ON o.customer_id = c.customer_id
-INNER JOIN Address a ON o.address_id = a.address_id;
+INNER JOIN Address a ON o.address_id = a.address_id
+INNER JOIN Customer c ON a.customer_id = c.customer_id
+INNER JOIN Location l ON a.zip_code = l.zip_code
+INNER JOIN Contain ct ON o.order_id = ct.order_id
+GROUP BY o.order_id, c.last_name, c.first_name, l.city;
 
 -- 14. MULTIPLE JOIN: See exactly which Brand and Category are selling in Order #1.
 SELECT p.product_name, b.brand_name, cat.category_name, c.purchased_quantity
@@ -107,10 +117,14 @@ INNER JOIN Product acc ON bc.product_id_1 = acc.product_id;
 -- CATEGORY 4: NESTED QUERIES (IN, NOT IN, EXISTS, ANY, ALL)
 -- =========================================================================
 
--- 16. NOT IN: Marketing wants to find Customers who have registered but never placed an order.
+-- 16. NOT IN: Marketing wants to find Customers who registered but never placed an order.
 SELECT customer_id, first_name, last_name, email
 FROM Customer
-WHERE customer_id NOT IN (SELECT customer_id FROM Order_);
+WHERE customer_id NOT IN (
+    SELECT a.customer_id 
+    FROM Order_ o 
+    INNER JOIN Address a ON o.address_id = a.address_id
+);
 
 -- 17. ALL: Find the premium products that cost more than ALL wetsuits.
 SELECT product_name, product_price
@@ -135,8 +149,9 @@ WHERE EXISTS (
 SELECT DISTINCT c.first_name, c.last_name, c.email
 FROM Customer c
 WHERE c.customer_id IN (
-    SELECT o.customer_id 
+    SELECT a.customer_id 
     FROM Order_ o
+    INNER JOIN Address a ON o.address_id = a.address_id
     INNER JOIN Contain ct ON o.order_id = ct.order_id
     INNER JOIN Product p ON ct.product_id = p.product_id
     INNER JOIN Brand b ON p.band_id = b.band_id
