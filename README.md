@@ -57,7 +57,8 @@ Here is the Conceptual Data Model created on Looping, complying with the **3rd N
 | **Weak Entity** (Relative Identification) | The `ADDRESS` entity is a weak entity relative to `CUSTOMER`. |
 | **Reflexive Relationship** | The `BE_COMPATIBLE` association links products (accessories) to other products within the same table. |
 
-![Conceptual Data Model](https://github.com/user-attachments/assets/e5cac6ad-39c5-4c18-9123-2bf985674b52)
+<img width="1283" height="663" alt="image" src="https://github.com/user-attachments/assets/7fee0f29-d145-4331-abc7-eb76cae03df1" />
+
 
 ---
 
